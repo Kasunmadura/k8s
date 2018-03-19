@@ -110,32 +110,32 @@ determind which nodes reponsible for pods
 cloud-controller-manager runs controllers that interact with the underlying cloud providers.
 The following controllers have cloud provider dependencies:
 
-##### Node Controller:
+#####   1. Node Controller:
 For checking the cloud provider to determine if a node has been deleted in the cloud after it stops responding
 
-##### Route Controller:
+#####   2 .Route Controller:
 For setting up routes in the underlying cloud infrastructure
 
-##### Service Controller:
+#####   3. Service Controller:
 For creating, updating and deleting cloud provider load balancers
 
-##### Volume Controller:
+#####   4. Volume Controller:
 For creating, attaching, and mounting volumes, and interacting with the cloud provider to orchestrate volumes
 
 #### kube-conroller-manager:
 
 These controllers include in kube controller -
 
-##### Node Controller:
+#####   1. Node Controller:
 Responsible for noticing and responding when nodes go down.
 
-##### Replication Controller:
+#####   2. Replication Controller:
 Responsible for maintaining the correct number of pods for every replication controller object in the system.
 
-##### Endpoints Controller:
+#####   3. Endpoints Controller:
 Populates the Endpoints object (that is, joins Services & Pods).
 
-##### Service Account & Token Controllers:
+#####   4. Service Account & Token Controllers:
  Create default accounts and API access tokens for new namespaces.
 
 ### Node Component
