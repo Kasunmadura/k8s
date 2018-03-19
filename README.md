@@ -93,7 +93,7 @@ Setup  kubectl autocompletion
     kubectl completion -h
     echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-## k8s Achitechure
+## k8s Achitechture
 
 ![k8s_architecture](https://github.com/Kasunmadura/k8s/blob/master/images/k8s_architecture.png)
 
