@@ -1,6 +1,6 @@
-# Kubernetes Introdution and K8s Exam practices
+## Kubernetes Introduction and K8s Admin exam practices
 
-## Kubeadm Installtion
+### Kubeadm Installtion
 
 More infor https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
