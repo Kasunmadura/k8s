@@ -95,6 +95,8 @@ Setup  kubectl autocompletion
 
 ## k8s Achitechure
 
+![k8s_architecture](https://github.com/Kasunmadura/k8s/blob/master/images/k8s_architecture.png)
+
 #### kube-apiserver : Component on the master that exposes the Kubernetes API. It is the front-end for the Kubernetes control plane. .answer all api calls (it use key value storage call etcd)
 
 #### kube-scheduler : determind which nodes reponsible for pods
