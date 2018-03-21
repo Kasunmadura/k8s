@@ -6,7 +6,7 @@ More infor https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
 #### ports show have to allow in the network
 
-Master node(s)
+###### Master node(s)
 
 TCP 6443* K8s API Server
 TCP 2379-2380 etcd server client API
@@ -15,7 +15,7 @@ TCP 10251 kube-scheduler
 TCP 10252 kube-conroller-manager
 TCP 10255 Read-only Kubelet API
 
-Worker nodes:
+###### Worker nodes:
 
 TCP 10250 Kubelet API
 TCP 10255 Read-Only Kubelet API
@@ -66,6 +66,11 @@ Eg: ubuntu Installtion
 Make sure that the cgroup driver used by kubelet is the same as the one used by Docker. Verify that your Docker cgroup driver matches the kubelet config:
 
     docker info | grep -i cgroup
+    cat << EOF > /etc/docker/daemon.json
+    {
+         "exec-opts": ["native.cgroupdriver=systemd"]
+    }
+    EOF
     cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 If the Docker cgroup driver and the kubelet config don’t match, change the kubelet config to match the Docker cgroup driver. The flag you need to change is --cgroup-driver. If it’s already set, you can update like so:
@@ -77,6 +82,46 @@ Then restart kubelet:
 
     systemctl daemon-reload
     systemctl restart kubelet
+
+
+### Centos k8s Installtion
+
+Stop swap
+
+    swapoff -a
+
+change fstab swap config
+
+    yum update
+    yum install docker
+
+    systemclt enable docker
+    systemctl staet docker
+
+    cat << EOF > /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    enabled=1
+    gpgcheck=1
+    repo_gpgcheck=1
+    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    EOF
+
+Disable SElinux or allow k8s from selinux
+
+    setenforce 0
+    (/etc/selinux/config  selinux=permissive)
+
+    yum install -y kubeadmd kubelet kubectl
+    service enable kubelet
+
+    cat << EOF >  /etc/sysctl.d/k8s.conf
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    EOF
+
+    sysctl --system
 
 ### Setup kube Master
 
@@ -166,3 +211,75 @@ kube-proxy enables the Kubernetes service abstraction by maintaining network rul
 
 #### Container Runtime
 The container runtime is the software that is responsible for running containers. Kubernetes supports two runtimes: Docker and rkt.
+
+
+
+### K8s Objects/API primitives
+
+1. Persitent entities in the Kubernetes System.
+2. Uses these to represent state of the cluster.
+3. Describe:
+      What application are running.
+      which nodes those applications are running on.
+      Polices around those application
+4. Kubernetes Object are "records of intent"
+
+
+#### API primitives
+
+Object Spec
+
+1. Provided to Kubernetes.
+2. Describes desired state of objects.
+
+Object Status
+
+1. Provided by Kubernetes.
+2. Describes the actual state of the object.
+
+
+#### Common Kubernetes Objects
+
+1. Node
+2. Pods
+3. Deployments
+4. Services
+5. ConfigMaps
+
+
+#### Kubernetes Namespaces
+
+1. Multiple virtual clustes back by the same vitual cluster.
+2. Generally for large deployments.
+3. Provide scope for names.
+4. Easy way to divide cluster resources.
+5. Allows for multiple teams of users.
+6. Allows for resource quotas.
+7. Special "kube-system" Namespaces (used to diffentiate system pods from user pods).
+
+#### Nodes
+
+1. Might be a VM or physical machine.
+2. Services necessary to run pods.
+3. Managed by the master.
+4. Services necessary:
+      Container runtime
+      kubelet
+      kube-proxy
+5. Not inherently created by kubernetes.but by the Cloud Provicer.
+6. Kubernetes check the node for validity.
+
+
+#### Cloud Controller Managers
+
+1. Route controller (google compute cluseter: gce clusters only).
+2. Service Controller.
+3. PersistentVolumeLabels controller.
+
+#### Node Controller
+
+1. Assigns CIDR block to a newly registered node.
+2. Keeps track of the nodes.
+3. Monitors the node health.
+4. Evicts pods from unhealthy nodes.
+5. Can taint nodes based on current conditions in more recent versions.
