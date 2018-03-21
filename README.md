@@ -4,7 +4,7 @@
 
 More infor https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
-#### ports show have to allow in the network
+#### List of Ports which we have to allow in the network
 
 ###### Master node(s)
 
