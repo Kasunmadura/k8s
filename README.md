@@ -8,18 +8,18 @@ More infor https://kubernetes.io/docs/setup/independent/install-kubeadm/
 
 ###### Master node(s)
 
-TCP 6443* K8s API Server
-TCP 2379-2380 etcd server client API
-TCP 10250 Kubelet API
-TCP 10251 kube-scheduler
-TCP 10252 kube-conroller-manager
-TCP 10255 Read-only Kubelet API
+    TCP 6443* K8s API Server
+    TCP 2379-2380 etcd server client API
+    TCP 10250 Kubelet API
+    TCP 10251 kube-scheduler
+    TCP 10252 kube-conroller-manager
+    TCP 10255 Read-only Kubelet API
 
 ###### Worker nodes:
 
-TCP 10250 Kubelet API
-TCP 10255 Read-Only Kubelet API
-TCP 30000-32767 NodePort Services
+    TCP 10250 Kubelet API
+    TCP 10255 Read-Only Kubelet API
+    TCP 30000-32767 NodePort Services
 
 #### Install Docker from Ubuntu’s repositories:
 
