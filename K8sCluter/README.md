@@ -185,3 +185,15 @@ Single node k8s
   6. Test
   7. Dump logs
   8. Tear down
+
+
+#### Validating Nodes and Cluster
+
+  1. Master
+   
+    kubectl get nodes
+    kubectl describe node master-1
+
+  2. nodes
+
+    ps -aux | grep kube
