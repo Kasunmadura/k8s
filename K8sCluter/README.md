@@ -139,3 +139,49 @@ Single node k8s
     c. Either create this manully or copy it from a master node on a working cluster.
     d. once these files exist.copy the kube-apiserver.yaml into /etc/kubernetes/manifests/ on each of our master nodes.
     e. The kubelet monitors this directory, and will automatically create an instance of the kube-apiserver container using the pod definition specified in the  file.
+    f. if a network load balancer is setup.then access the cluster using VIP and see traffic balancing between the apiserver instances.
+    g. Setting up a aload balancer will depend on the specifics of your platform.
+    h. For external uses of the API(eg. the kubectl command line interface,continouse build pipelines or other clients) remember to configure them to talk to the external load balancer's IP address.
+
+#### Step Four Controller/Scheduler Daemons
+
+    a. Now we need to allow our state to change
+    b. Controller managers and scheduler.
+    c. These processes must not modify the cluster's state simultaneously, use a lease-lock.
+    d. Each scheduler and controller manager can be launched with a --leader-elect flag
+    e. The scheduler and conttoller-manager can be configured to talk to the API server that is on the same node (i.e 127.0.0.1)
+    f. it  can also  be configured to communicate using the load balanced IP address of the API servers.
+    g. The scheduler and controller-manager will complete the leader election process mentioned before when using the --lead-elect flag.
+    h. In case of failure accessing the API server.the elected leader will not be able to renew the lease,causing a new leader to be elected.
+    i. This is especially relavant when configuring the scheduler and controller-manager to access  the API server via 127.0.0.1 and the API server on the same node is unavailable.
+
+#### Installing Configuration Files
+
+    a.Create empty log files on each node, so that Docker will mount the files and not make new directories:
+        touch /var/log/kube-scheduler.log
+        touch /var/log/kube-controller-manager.log
+    b.Set up the describtions of the scheduler and controller manager pods on each node by copying kube-scheduler.yaml and kube-controller-manager.yaml into the /etc/kubernetes/manifests directory
+
+    c.And once that's all done, we've now made our cluster highly available Remember,if a worker node goes down. kubernetes will rapidlu detect that and spin up replacement pods elsewhere in the cluser.
+
+
+#### End-to-End Testing and Validation
+
+  1. Provide a mechanism to test end-to-end behavaior of the system.
+  2. Last signal to ensure  end user operations match specifications.
+  3. Primarily a developer tool.
+  4. Difficult to run against just "any" deployment -- many sepcific test for cloud providers
+      a. Ubuntu has its own Juju-deployed tests
+      b. GCE has its own
+      c. Many tests offered
+
+#### Kubetest Suite
+
+  1. Ideal for GCE or AWS users
+  2. Build
+  3. storage
+  4. Extract
+  5. Brung up the cluster
+  6. Test
+  7. Dump logs
+  8. Tear down
