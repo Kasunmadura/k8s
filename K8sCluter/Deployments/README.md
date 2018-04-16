@@ -66,7 +66,7 @@ get details about pods and replicas
     kubectl get pods
     kubectl get deploy
 
-#### Scalling the deployment
+#### Scaling the deployment
 
     kubectl scale deployment nginx-deployment --replicas=10
     kubectl autoscale deployment nginx-deployment --min=10 --max=15 --cup-precent=80
@@ -76,7 +76,7 @@ RollingUpdate Deployments support running multiple versions of an application at
 For example, you are running a Deployment with 10 replicas, maxSurge=3, and maxUnavailable=2.
 
 
-#### Pushing and Resumming a Deployment
+#### Pushing and Resuming a Deployment
 
      kubectl get deployment
      kubectl get rs
@@ -87,7 +87,7 @@ For example, you are running a Deployment with 10 replicas, maxSurge=3, and maxU
      kubectl get all
 
 
-##### setup Application envs
+##### Setup Application envs
 
 
      kubectl create configmap my-map --from-literal=school=Kegaluvidiyalaya
@@ -109,3 +109,87 @@ For example, you are running a Deployment with 10 replicas, maxSurge=3, and maxU
       kubectl describe configmaps
       kubectl create -f pod-config.yaml
       kubectl logs config-test-pod
+
+
+
+#### Self-Healing
+
+We could try to stop one of pod and shutdown one of node in our cluster and check whether how self healing working on the Kubernetes.
+
+
+     kubectl get pods
+     kubectl delete pods nginx-deployment-75675f5897-7l6nn
+     kubectl get pods
+
+
+#### Labels and Selectors
+
+
+    kubectl lable  -l pod app=nginx  tier=frontend
+    kubectl get pods -l tier=frontend
+    kubectl get pods -l 'environment in (production),tier in (frontend)'
+    kubectl get pods -l 'environment, environment notin(qa)'
+    kubectl get pods -l environment=production,tier=frontend
+    kubectl label pod mysql-test-3221451521 instance=testing --overwrite
+
+
+#### DaemonSets
+
+
+    kubectl get daemonsets -n kube-system
+    kubectl describe daemonsets kube-flannel-ds -n kube-system
+
+
+#### Resource Limits and Pod Scheduling
+
+
+Remove from node 'foo' the taint with key 'dedicated' and effect 'NoSchedule' if one exists.
+
+    kubectl taint nodes foo dedicated:NoSchedule-
+
+
+Remove from node 'foo' all the taints with key 'dedicated'
+
+    kubectl taint nodes foo dedicated-
+
+Add a taint with key 'dedicated' on nodes having label mylabel=X
+
+  kubectl taint node -l myLabel=X  dedicated=foo:PreferNoSchedule
+
+
+#### Manually Scheduling a Pod
+
+Setup label for the node
+
+    kubectl lable node k8s-node-2 net=gigabit
+    kubectl describe node k8s-node-2
+
+Use nodeSelector for point pod to specific node. Before that we have to setup label for that node.
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: webhead
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          run: webhead
+      template:
+        metadata:
+          labels:
+            run: webhead
+        spec:
+          containers:
+          - name: webhead
+            image: nginx
+            ports:
+            - containerPort: 80
+          nodeSelector:
+            net: gigabit
+
+
+Then we could see about pods starting on the k8s-node-2 server CreationPolicy
+
+      kubectl get pods
+      kubectl describe pods webhead-7765695f45-hh9n7
