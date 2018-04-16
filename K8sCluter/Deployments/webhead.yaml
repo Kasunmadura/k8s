@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhead
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: webhead
+  template:
+    metadata:
+      labels:
+        run: webhead
+    spec:
+      containers:
+      - name: webhead
+        image: nginx
+        ports:
+        - containerPort: 80
+      nodeSelector:
+        net: gigabit

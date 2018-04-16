@@ -1,0 +1,10 @@
+Example Labels:
+
+* "release" : "stable", "release" :"canary"
+* "environment" : "dev", "environment" : "qa", "environment : "production" , "environment": "staging" 
+* "tier" : "frontend", "tier" : "backend" , "tier" : "cache"
+* "partition" : "custormerA" , "partition" : "custormerB"
+* "track" : "daily" , "track" : "weekly"
+* "network" : "public" , "network" : "private" 
+
+These are just examples for commonly use labels   
