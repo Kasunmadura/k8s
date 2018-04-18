@@ -190,10 +190,18 @@ Single node k8s
 #### Validating Nodes and Cluster
 
   1. Master
-   
+
     kubectl get nodes
     kubectl describe node master-1
 
   2. nodes
 
     ps -aux | grep kube
+
+
+#### Monitoring
+
+Heapster -- Cluster-wide aggregator of monitoring and event data.
+
+
+![Monitoring](https://github.com/Kasunmadura/k8s/blob/master/images/monitoring.png)
