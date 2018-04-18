@@ -201,7 +201,30 @@ Single node k8s
 
 #### Monitoring
 
+
+
 Heapster -- Cluster-wide aggregator of monitoring and event data.
+
+1. Kubelet acts as a bridge between the Kubernetes master and the nodes.
+2. Manages the pods and containers running on a node.
+3. Translated each pod in to the containers making it up.
+4. Obtains usage statictics from CAdvicor.
+5. Exposes the aggregated pod resource usage statictics via REST API
+
+and we can use  Grafana with InfluxDB
+
+1. Heapster is setup to use this storage backend by default on most Kubernetes clusters
+2. InfluxDB and grafana runs in pods.
+3. The pod expose itself as Kubernetes service which is how Heapster then discocers it.
+4. The Grafana container servers Grafana's UI which provide a dashboard
+5. The default dashboard for Kubernetes contains an example dashboard that monitors resource usage of cluster and the pods inside of it. This dashboard can, of course, be fully customized and expanded.
+
+Or Google cloud Monitoring also
+
+1. Google cloud monitoring is hosted monitoring service that allows you to visualize and alert important metrics in your application.
+2. Heapster can be set up to automatically push all collcted metrics to google cloud Monitoring.
+3. These metices are then Avaliable in the google cloud monitoring console.
+4. This storage backend is the easiest to setup and maintain
 
 
 ![Monitoring](https://github.com/Kasunmadura/k8s/blob/master/images/monitoring.png)
