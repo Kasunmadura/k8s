@@ -205,3 +205,10 @@ Heapster -- Cluster-wide aggregator of monitoring and event data.
 
 
 ![Monitoring](https://github.com/Kasunmadura/k8s/blob/master/images/monitoring.png)
+
+
+CAdvicer is open source container resource resource usage and performance analiysis agent.
+
+    1. Auto discover all containers on a node and collects CPU, Memory , file system ..etc
+    2. provide the overall machin usage by analyzing the 'root' container on the machine
+    3. Exposes a simple UI for local containers on port 4194
