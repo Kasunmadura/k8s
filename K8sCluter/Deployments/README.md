@@ -31,6 +31,11 @@ Example deployment file
       kubectl rollout status deployment nginx-deployment
       kubectl describe deployment nginx-deployment
 
+
+### Command for get pods details related to node 
+
+      kubectl get pods -o wide
+
 ### Generate yaml file from running deployment
 
       kubectl get deployment nginx-deployment -o yaml
