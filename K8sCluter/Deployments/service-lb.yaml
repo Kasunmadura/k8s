@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: la-lb-service
+spec:
+  selector:
+    app: kasun-app
+  ports:
+  - protocol : TCP
+    port: 80
+    tagetPort: 8973
+
+  clusterIP: 10.0.64.12
+  loadBalancerIP: 51.12.45.12
+  type: LoadBalancer 

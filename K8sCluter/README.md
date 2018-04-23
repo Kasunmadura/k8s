@@ -235,3 +235,137 @@ CAdvicer is open source container resource resource usage and performance analiy
     1. Auto discover all containers on a node and collects CPU, Memory , file system ..etc
     2. provide the overall machin usage by analyzing the 'root' container on the machine
     3. Exposes a simple UI for local containers on port 4194
+
+
+### Service Networking
+
+
+Expose deployment
+
+    kubectl get pods -o wide
+    kubectl get deployment nginx
+
+    kubectl expose deployment nginx --type="NodePort" --port=80
+
+Examples:
+
+1. Create a service for a replicated nginx, which serves on port 80 and connects to the containers on port 8000.
+
+      kubectl expose rc nginx --port=80 --target-port=8000
+
+2.  Create a service for a replication controller identified by type and name specified in "nginx-controller.yaml",
+    which serves on port 80 and connects to the containers on port 8000.
+
+      kubectl expose -f nginx-controller.yaml --port=80 --target-port=8000
+
+3. Create a service for a pod valid-pod, which serves on port 444 with the name "frontend"
+
+      kubectl expose pod valid-pod --port=444 --name=frontend
+4. Create a second service based on the above service, exposing the container port 8443 as port 443 with the name
+    "nginx-https"
+
+      kubectl expose service nginx --port=443 --target-port=8443 --name=nginx-https
+
+5. Create a service for a replicated streaming application on port 4100 balancing UDP traffic and named 'video-stream'.
+
+      kubectl expose rc streamer --port=4100 --protocol=udp --name=video-stream
+
+6.  Create a service for a replicated nginx using replica set, which serves on port 80 and connects to the containers on
+    port 8000.
+
+      kubectl expose rs nginx --port=80 --target-port=8000
+
+7. Create a service for an nginx deployment, which serves on port 80 and connects to the containers on port 8000.
+
+      kubectl expose deployment nginx --port=80 --target-port=800
+
+#### Service expose types
+
+1. ClusterIP (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
+2. NodePort - Exposes the Service on the same port of each selected Node in the cluster using NAT. Makes a Service accessible from outside the cluster using <NodeIP>:<NodePort>. Superset of ClusterIP.
+3. LoadBalancer - Creates an external load balancer in the current cloud (if supported) and assigns a fixed, external IP to the Service. Superset of NodePort.
+4. ExternalName - Exposes the Service using an arbitrary name (specified by externalName in the spec) by returning a CNAME record with the name. No proxy is used. This type requires v1.7 or higher of kube-dns.
+
+
+
+### Ingress
+
+
+Ingress is an API object that manages external access to the services in a cluster, usually HTTP.It ca n provide load balancing,SSL termination and name-based virtual hosting.
+For our purposes, an Edge router is a router that enforces the firewall policy for your cluster.
+
+This could be a gateway managed by a cloud provider or a physical piece of hardware. Our cluster network is a set of links, either logical or physical ,that facilitate communication
+within a cluster according to the Kubernetes networking model. Example for a Cluster network include Overlays such as flannel,Like we're using in our testing cluster,Or SDNs such as OpenVSwitch.
+
+Service is Kubernetes Service that identifies a set of pods using label selectors, Unless mentioned otherwise,Services are assumed to have virtual IPs only routable with the cluster network.
+
+### What is ingress ???
+
+Service and pods have IPs only routable by the cluster network.
+So an ingress is a collection of rules that allow inbound connection
+Can be configured to give service externally reachable URLs, Load balancer traffic. terminate SSL, offers name-based virtual hosting, and the like.
+Users requests ingress by POSTing the Ingress resource to a API serves. An ingress controller is responsible for the fulfilling the ingress, usually by way of a load balancer,
+though it may also configure the edge router or additional front ends to help handle the traffic in Highly Available manner.
+
+Relatively new resource and not available in any Kubernetes release prior to 1.1
+ingress controller to satisfy an ingress object
+
+Most cloud providers deploy an ingress controller on the master.
+Each ingress pod must be annotated with the appropriate class
+
+
+### How to secure an ingress:
+
+
+1. Specify secret.
+
+  * TLS private Keys
+  * Certificate
+
+2. Port 443 ( Assumes TLS termination)
+3. Multiple hosts are multiplexed on the same port by hostnames specified through the SNI TLS extension
+4. The TLS secret must contain keys named tls.crt and tls.key contain the certificate and private key to use for TLS.
+
+
+An ingress controller is bootstrapped with a load balancing policy that it applies to all ingress objects.
+eg:
+    * load balancing algorithms
+    * backend weight scheme
+
+persistent sessions and dynamic weight not yet exposed. The service load balancer may provide some of this.
+Health check are not exposed directly through the ingress
+Readiness probes allow for similar functionality
+We can update running ingress also. (kubectl edit ing test). Alternatively, kubeclt replace -f on a modified lngress yaml file.
+This command updates a running K8s object.
+
+Remember that ingress is a relatively new concept in K8s. other way to expose a service that doesn't involve the ingress resource:
+
+  * Use Service.Type=LoadBalancer
+  * Use Serivce.Type=NodePort
+  * Use a Port Proxy.
+
+
+### Deploying a Load Balancer
+
+    kubectl create -f service-lb.yaml
+
+
+### Configure and Use Cluster DNS
+
+
+    kubectl get pods -n kube-system (check cluster-dns)
+    kubectl exec -it busybox -- nslookup nginx
+
+    kubectl get services
+
+1s we have create the service then it will start resolve DNS
+
+    kubectl expose deployment dns-target
+    kubectl exec -it busybox -- nslookup dnstaget
+
+Troubleshooting
+
+    kubectl exec -it busybox -- cat /etc/resolve.configure
+    kubectl get pods -n kube-systems | grep kube-dnstaget
+
+    kubectl logs -n kube-system $(kubectl get pods -n kube-systems -l k8s-app=kube-dns) -c dnsmask 
