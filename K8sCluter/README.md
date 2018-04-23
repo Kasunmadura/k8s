@@ -406,3 +406,20 @@ Kubernetes Network model
 3. The IP of a container is the same regardless of with container view it
 4. k8s applies ip address at the pod level
 5. "IP-per-Pod" containers in a pod share a single ip address, like processes in VM
+
+
+CNI Container Network interface
+
+* Must be implemented as an executable invoked by the container management systems (in our case k8s )
+* Plugin is responsible for
+1. inserting the network interface into the container network namespace
+2. Making necessary change to the host
+3. Assign IP address to the interface
+4. Set up route consistent with ip management
+
+
+### Kubelet
+
+1. Default network plugin
+2. Default cluster-wide network
+3. Probes for network plugin on startup  
