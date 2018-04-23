@@ -422,4 +422,31 @@ CNI Container Network interface
 
 1. Default network plugin
 2. Default cluster-wide network
-3. Probes for network plugin on startup  
+3. Probes for network plugin on startup
+
+
+### Flannel
+
+* Simple and easy layer 3 network fabric
+* Flannel runs each host (via DaemonSet)
+  1. Allocates subnets least to each host
+  2. Stores network configuration, allocated subnets, other data
+  3. Packets forwarded using VxLANs
+
+
+### Calico
+
+1. Free and open source
+2. Simplified  network model
+3. Scalable, distributed control plane
+4. Policy drive network security
+5. uses overlay network sparingly
+6. Widely deployed
+7. Can be run in policy enforcement mode
+
+
+other worth mentioning : Cilium, Contiv , Multus, OVN , Romana, Vmware NSX-T  ..etc
+
+
+K8s require its networking model to be implemented by 3rd party plugin, call CNI
+Different CNIs features support different hardware, software ,overlay networks, policies and features
