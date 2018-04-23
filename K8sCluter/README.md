@@ -368,4 +368,9 @@ Troubleshooting
     kubectl exec -it busybox -- cat /etc/resolve.configure
     kubectl get pods -n kube-systems | grep kube-dnstaget
 
-    kubectl logs -n kube-system $(kubectl get pods -n kube-systems -l k8s-app=kube-dns) -c dnsmask 
+    kubectl logs -n kube-system $(kubectl get pods -n kube-systems -l k8s-app=kube-dns) -c dnsmask
+
+
+    kubectl get svn -n kube-system
+    kubectl get endponts kube-dns -n kube-systemd
+    
