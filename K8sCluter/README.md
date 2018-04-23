@@ -373,4 +373,36 @@ Troubleshooting
 
     kubectl get svn -n kube-system
     kubectl get endponts kube-dns -n kube-systemd
-    
+
+
+### CNI
+
+1. All pods can communicate with all other pods.
+2. Each pods has it own ip
+3. No need to mapping container ports
+4. Backward compatible model with VMs:
+
+    * Port allocation
+    * Naming
+    * Service Discovery
+    * Load balancing
+    * Application Configure
+    * Migrations
+
+
+Kubernetes Network model
+
+* Dynamic Port Allocation problems
+
+1. Every application must be configure to know which port , etc
+2. APi service must inject dynamic port numbers in to containers
+3. Service must be able to find one anther or be configure to do so
+
+
+* The Kubernetes Way:
+
+1. All containers can communicate with each other without NAT
+2. All nodes can communicate with all containers without NAT
+3. The IP of a container is the same regardless of with container view it
+4. k8s applies ip address at the pod level
+5. "IP-per-Pod" containers in a pod share a single ip address, like processes in VM
