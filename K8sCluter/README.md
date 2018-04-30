@@ -450,3 +450,157 @@ other worth mentioning : Cilium, Contiv , Multus, OVN , Romana, Vmware NSX-T  ..
 
 K8s require its networking model to be implemented by 3rd party plugin, call CNI
 Different CNIs features support different hardware, software ,overlay networks, policies and features
+
+
+### Kubernetes and persistent Volumes
+
+1. Native pod storage is Ephemeral --like a Pod
+2. What happens when a container crashes:
+    * Kubectl restart it (possibly on anther node)
+    * File system is re-create from images
+    * Ephemeral files are gone
+
+#### Docker Volumes
+
+1. Directory on disk
+2. Possibly in another container
+3. New Volume Drivers
+
+#### Kubernetes Volumes
+
+1. Same lifetime as its pods
+2. Data preserved across containers restarts
+3. Pod goes away -> Volume goes away
+4. Directory with Data
+5. Accessible to containers in a pod
+6. Implementation details determined by volume types
+
+
+### Using Volumes
+
+1. Pod spec indicates which volumes to provide for the pod (spec.volumes)
+2. Pod spec indicates where to mount these volumes in containers (spec.containers.volumeMounts)
+3. Seen from the container's perspective as the file systemd
+4. Volumes cannot mount onto other volumes
+5. No hard links to other volumes
+6. Each pod must specify where each volume is mounted
+
+#### awsElasticBlockStore
+
+1. Mounts and AWS EBS volume to a pod
+2. EBS volume is preserved when unmounted
+3. Must be created prior to use
+4. Nodes must be on AWS EC2 instances in same region
+5. Single instance mounting only
+
+    created via command like:
+
+      aws ec2 create-volume --available-zone=us-east-1 --size=10 --volume-type=9p2
+
+#### cephfs
+
+1. allows mounting a CephFS volume to a pod
+2. Contents of volume are preserved when unmounted
+3. Must have a Ceph server running
+4. Share must be exported
+
+#### csi
+
+1. Container Storage interface
+2. In-tree CSI volume plugin for volumes on the same node
+3. Kubernetes 1.9 +
+    * --feature-gates=CSIPersitentVolume=True
+4. Metadata fileds specify what is used and How
+5. Driver field specify the name of driver
+6. volumeHandle identifies volume name
+7. readOnly is supported
+
+#### downwardAPI
+
+1. Mount a directory and write data in plan text file
+
+
+#### emptyDir
+
+1. created when a pod is assigned to a node
+2. Exists while pod runs on a particular node
+3. initially empty
+4. Multiple containers can read/write same volume
+5. Volume can be mounted per container --same or different mount points
+6. Pod removed -> volume removed
+7. Stored on node's local mediume
+8. Optional - set emptyDir.medium = Memory for RAM based tmpfs
+
+#### fc (fiber Channel)
+
+1. Allows existing fc volume to be mounted to a pod
+2. Single or Multiple Target using targetWWWs
+3. FC SAN Zoning must be allocated
+4. LUNs must be masked to target WWN
+
+#### flocker
+
+1. Open source clustered container data volume manager
+2. Management and orchestration of volumes
+3. Allows Flocker dataset to be mounted into a pod
+4. Must be created prior to mounting
+5. Can be transferred between pods
+6. Must have Flocker
+
+#### gcePersistentDisk
+
+1. Mounts a GCE persistent disk to pod
+2. Data preserved of volume unmounted
+3. Nodes must be on GCE VMs
+4. Same project and zone as the persistent disk
+5. Multiple concurrnet mounts allowed, but read-only
+6. Create with a command like:
+
+    gcloud compute disk create --size=500GB -zone=us-centrall-a my-k8s-disk
+
+
+#### gitRepo
+
+1. Mounts empltyDir and clones a git repository
+
+eg:
+
+    ...
+    volume:
+    - name : git-volume
+    gitRepo:
+      repository : "git@github.com:kasunmadura/k8s.git"
+      revision   :  "dd8s9d8as9d8asddjasdjad7asdajdjadjsd9asuda"
+
+#### glusterfs
+
+1. Allows GlusterFS volume to be mounted to a pod
+2. Volume data preserved if volume is unmounted
+3. Multiple concurrent mounts --read/write --are allowed
+4. Must have GlusterFS
+
+
+#### hostPath
+
+1. Mounts file or Directory from host node's filesystem to a pod
+2. Field type - Empty string (for backward compatibility) performs no checks
+3. DirectoryOrCreate -- Created if not present
+4. Directory-- Directory must exist
+5. FileOrCreate -- created if not present
+6. File -- File must exist
+7. Socket -- Socket must exist
+8. CharDevice -- Character device must exist
+9. BlockDevice -- Block device must exist
+10. HostPath might behave different on different nodes regardless of pod configuration
+11. Files and dir created on the host are only writable by root
+
+
+#### iSCSI
+
+1. Allows an exiting iSCSI volumes to be mounted to a pod
+2. Volume data preserved if volume is unmounted
+3. Must have an iSCSI provider
+4. Multiple read only concurrent connections allowed
+5. Only one writer at a time
+
+ 
