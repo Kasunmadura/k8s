@@ -603,4 +603,70 @@ eg:
 4. Multiple read only concurrent connections allowed
 5. Only one writer at a time
 
- 
+#### local
+
+1. Alpha, requires "PersistentLocalVolumes" and "VolumeScheduling" feature gates
+2. Allows local mounted storage to be mounted to a pods
+3. Statically created PersistentLocalVolume
+4. Kubernetes is aware of the volume's node contraints
+5. Must be on the node
+6. Not suitable for all applications
+7. 1.9 + Volume binding can be delayed until pod sheduing
+
+#### NFS
+
+1. Allows existing NFS share to be mounted to a pod
+2. Volume data preserved if volume unmounted
+3. Must have an NFS server
+
+#### PersistenVolmeClaim
+
+1. Used ro mount a PersitentVolume into a pod
+2. Users can stake a claim to durable storage without knowing implementation details
+
+
+#### Projected
+
+1. Volum types currently projected (subject to expansion!):
+  * secert
+  * downwardAPI
+  * configMap
+
+
+#### ProtworxVolume
+
+1. Elastic block storage layer
+2. Storage on a Server
+3. Capabilites tier
+4. Aggreates capacity
+5. Runs in-guest in VMs or on bare metal Linux nodes
+6. Can be created dynamically oer pre-provisioned
+
+#### rbd
+
+1. allow Rados Block Device volume to be mounted to pod
+
+#### ScalelIO
+
+1. Software based storage
+2. Allows ScaleIO volumes to be mounted to pods
+3. Must have existing ScaleIO Cluster
+4. Volumes must be pre-created
+
+#### Scret
+
+1. used to pass sensitive information to pods
+2. Stored using the k8s API
+3. Mount secrets as file for use by pods
+4. Volumes are backed by tmpfs so secrets  are never written to non-volatile storage
+5. Secrets must be created in K8s API prior to use
+
+
+#### Storageos
+
+1. Allows exitsting Storage OS volume to be mounted to a pods
+2. Runs as container in the k8s Env
+3. Data can be repliacted
+4. Provisioning and compresssion can improve utilization and reduce cost
+5. Provides block storage to containers via system
+6. requires 64-Linux
