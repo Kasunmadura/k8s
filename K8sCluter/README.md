@@ -670,3 +670,116 @@ eg:
 4. Provisioning and compresssion can improve utilization and reduce cost
 5. Provides block storage to containers via system
 6. requires 64-Linux
+
+
+### Volumes and Their Access Modes
+
+1. PersistentVolume -- API for users that abstracts implementation details of storage
+2. PersistentVolumeClaim -- Methond for users to claim durable storage regradless  of implementation details
+
+### PersistentVolume (PV)
+
+1. provisioned storage in the Cluster
+2. cluster resource
+3. Volume plugins have independent lifecycle from pods
+4. Volumes share the lifecycle of he pod: PersistentVolumes fo not
+5. API object (YAML) details the implemenation
+
+### PersistentVolumeClaim
+
+1. Request for storage
+2. Pods consume node resources; PVCs consume PV resorcers
+3. Pods can request specific CPU memory ; PVCs can request size and access modes
+
+### PVs and PVCs
+
+1. Users and applications do nto share identical requirements
+2. Adminstrators should offer a varity of PVs without users
+3. PVs are cluster resource , PVCs are requests for the cluster resource
+4. PVCs also act as a "claim check" on a resource
+5. PVs and PVCs have a set lifecycle
+
+  * Provision
+  * Bind
+  * Reclaim
+
+### PV Provisioning
+
+1. Static
+
+  * Cretes PVs
+  * in the K8s API Avaliable for consumption
+
+2. Dynamic
+
+  * Used when none of the static PVs match the PVC
+  * Based on StoageClasses
+  * PVC must request a created and configured storage classic
+  * Claims requesting nameless class disble dynamic provistioning
+
+To enable dyanamic storage provistioning, DefaultstorageClass adminsssion controller on the API server must be enabled
+
+### Binding
+
+1. user create PVC
+2. Master watches for new PVCs and matches them to PVs
+3. Master binds PVC to PV
+4. Volume may be more that the request
+5. Binds are exclusive
+6. PVC -> PC mapping is always 1:1
+7. Claims not matched will remain unbound indefinitely
+
+### Pod Uses Volume
+
+1. Pods treat PVCs as volumes
+2. Cluster checks claim, mounts appropriate volume to pod
+
+
+### PersistentVolumes Claim Protection
+
+1. Alpha feature as of k8s 1.9
+2. Ensures PVCs actively in use do not get removeed from the system
+3. PVC considered active when :
+
+  * The pod status is Pending and the pod is assigned to node
+  * The pod status is Runbing
+
+4. if a user detetes a PVC in use, removal is postponed until PVC is not in use by any pod
+
+
+### Reclaiming
+
+1. User can delete PVC objects
+2. Reclaiming policy for a PV tells the clusterwaht to do with volume
+3. Polices:
+  * Retain
+  * Recycle
+  * Delete
+4. Policies allow for manual reclamation of a resource
+  * PVC delete
+  * PV still exists ; volume is "released"
+  * Not yet avaliable because tht data is still present
+  * Admin can manually reclaim the volume
+5. Adminstrator can configure custom recycler pod template
+6. Must contain a volumes specification
+7. Volume plugs that support Delete reclaims policy
+  * removes the PersistentVolumes object for k8s
+  * Associated storage asstes in the infrastructure
+  * Dynamically provisioned volumes inherit reclaim policy their StorageClass
+8. Administrator should configure StorageClass according to expectations
+
+### Capacity
+
+1. PVs have a specific storage capacity
+2. Set using capacity attribute
+3. Storage size is the only resource that can be set or requested
+
+
+### Access Modes
+
+1.  Must be supported by storage resource provide
+2.  ReadWriteOnce -- can be mounted  as read/write by one onde only (RWO)
+3.  ReadWriteMany -- can be mounted read-only by many nodes (ROX)
+4.  ReadWriteMany -- Can be mounted read/write by many nodes (RWX)
+
+A volume can only be mounted using one access mode at a time, regardless of the modes that are supported
