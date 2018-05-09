@@ -8,7 +8,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  PersistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Recycle
   nfs:
     path: /var/nfs/general
     server: 192.168.122.241
