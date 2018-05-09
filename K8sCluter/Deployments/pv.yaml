@@ -3,12 +3,13 @@ kind: PersistentVolume
 metadata:
   name: lapv
 spec:
-  capcity:
+  capacity:
     storage: 1Gi
   volumeMode: Filesystem
-  accessModes: ReadWriteMany
+  accessModes:
+    - ReadWriteMany
   PersistentVolumeReclaimPolicy: Recycle
   nfs:
     path: /var/nfs/general
-    server:
+    server: 192.168.122.241
     readOnly: false
