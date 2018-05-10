@@ -783,3 +783,30 @@ To enable dyanamic storage provistioning, DefaultstorageClass adminsssion contro
 4.  ReadWriteMany -- Can be mounted read/write by many nodes (RWX)
 
 A volume can only be mounted using one access mode at a time, regardless of the modes that are supported
+
+
+
+## Authentication and Authorization
+
+1. Transport Layer Security Established
+2. Authentication (Authenticator Modules)
+3. Admissions modules
+4. Authorization
+  * ABAC
+  * RBAC
+  * Webhook
+
+### Kubelet Authentication and Authorization
+
+Then kubernetes endpoint exposes APIs which give access to data of varying sensitivity
+How to authenticate and Authorize access:
+
+1. By default, requests are treated as anonymous requests
+2. If authenticated , then it authorized the  request
+3. default is alwaysAllow
+4. Might want to subdivide access beacuse:
+
+  * anonymous auth enabled but anonymouse users should be limited
+  * Bearer token auth enabled but some service accounts should be limited
+  * Client cerrticate auth enabled, but only some that are signed should be allowed
+  
