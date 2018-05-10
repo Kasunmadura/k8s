@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nfs-pod
-  lables:
+  labels:
     name: nfs-pod
 spec:
   containers:
@@ -12,7 +12,7 @@ spec:
       volumeMounts:
       - name: nfsvol
         mountPath: /tmp
-  restartPolicy: Never
+  restartPolicy: Always
   securityContext:
     fsGroup: 65534
     runAsUser: 65534
