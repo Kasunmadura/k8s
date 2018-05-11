@@ -809,4 +809,12 @@ How to authenticate and Authorize access:
   * anonymous auth enabled but anonymouse users should be limited
   * Bearer token auth enabled but some service accounts should be limited
   * Client cerrticate auth enabled, but only some that are signed should be allowed
-  
+
+
+### Configure Network Polices
+
+1. specification of how groups of pods may communicate
+2. Use labels to select pods and define rules
+3. Implemented by the network plugin
+4. Pods are non-isolated by default
+5. Pods are isolated when a Network Policy selects them
