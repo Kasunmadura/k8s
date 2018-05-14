@@ -818,3 +818,14 @@ How to authenticate and Authorize access:
 3. Implemented by the network plugin
 4. Pods are non-isolated by default
 5. Pods are isolated when a Network Policy selects them
+
+
+
+### Securing Images
+
+1. User containers could contain Vulnerabilites
+2. Continuous security Vulnerability scanning
+  * Check for outdated containers
+  * Known Vulnerabilities
+  * etc
+3. New Vulnerabilities are published every day !!
