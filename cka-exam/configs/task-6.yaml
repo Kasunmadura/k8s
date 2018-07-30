@@ -1,0 +1,8 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service-5
+spec:
+  ports:
+  - protocol: TCP
+    port: 80

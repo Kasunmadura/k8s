@@ -1,0 +1,9 @@
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: my-service-5
+subsets:
+  - addresses:
+      - ip: 18.191.183.222
+    ports:
+      - port: 80
