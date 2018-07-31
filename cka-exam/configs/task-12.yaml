@@ -1,15 +1,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: job-wq-1
+  name: job-paralle
 spec:
-  parallelism: 1
+  completions: 20
+  parallelism: 5
   template:
     metadata:
-      name: job-wq-1
+      name: job-paralle
     spec:
       containers:
       - name: job
         image: busybox
-        command:  ["sh", "-c", "while true ; do  date && sleep 10 ; done "]
+        command:  ["sh", "-c", "echo 'Hello parallel world' "]
       restartPolicy: Never

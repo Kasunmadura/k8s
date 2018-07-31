@@ -1,0 +1,7 @@
+apiVersion: "stable.example.com/v1"
+kind: forloop
+metadata:
+  name: my-new-forloop-object
+spec:
+  forSpec: "1"
+  image: my-awesome-cron-image

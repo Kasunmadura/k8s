@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ext-load
+  labels:
+    app: ext-load
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ext-load
+  template:
+    metadata:
+      labels:
+        app: ext-load
+    spec:
+      containers:
+      - name: ext-load
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ext-load
+spec:
+  selector:
+    app: ext-load
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    name: kasun
+  type: LoadBalancer
