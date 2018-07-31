@@ -1,0 +1,21 @@
+# loging to one of node and copy below file to /etc/kubernetes/manifests or  /etc/kubelet.d/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web
+  labels:
+    role: myrole
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+
+
+
+
+#KUBELET_ARGS="--cluster-dns=10.254.0.10 --cluster-domain=kube.local --pod-manifest-path=/etc/kubelet.d/"
+#  systemctl restart kubelet

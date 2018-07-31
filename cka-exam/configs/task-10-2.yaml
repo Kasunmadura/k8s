@@ -1,0 +1,20 @@
+# create dir /etc/foo and put username and pasword file
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod-32
+spec:
+  containers:
+  - name: mypod-32
+    image: redis
+    volumeMounts:
+    - name: foo1
+      mountPath: "/etc/foo1"
+  volumes:
+  - name: foo1
+    secret:
+      secretName: mysecre2
+      items:
+      - key: username
+        path: username
