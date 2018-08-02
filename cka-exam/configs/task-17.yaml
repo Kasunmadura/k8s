@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-pod-1
+spec:
+  type: ExternalName
+  externalName: fishpond.kasun.com
