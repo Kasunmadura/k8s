@@ -1,8 +1,17 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: test-ingress
+  name: nginx
+  namespace: default
+  labels:
+    app: db
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "elb"
 spec:
-  backend:
-    serviceName: testsvc
-    servicePort: 80
+  selector:
+    app: MyApp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9376
+  type: LoadBalancer

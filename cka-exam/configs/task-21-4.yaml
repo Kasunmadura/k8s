@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service-lb
+spec:
+  selector:
+    app: db
+  ports:
+  - protocol: TCP
+    port: 8089
+    targetPort: 80
+  type: LoadBalancer
