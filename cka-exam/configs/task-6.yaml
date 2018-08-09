@@ -1,8 +1,22 @@
+---
 kind: Service
 apiVersion: v1
 metadata:
-  name: my-service-5
+  name: my-service-6
 spec:
   ports:
   - protocol: TCP
     port: 80
+    targetPort: 9376
+
+---
+
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: my-service-6
+subsets:
+  - addresses:
+      - ip: 1.2.3.4
+    ports:
+      - port: 9376
