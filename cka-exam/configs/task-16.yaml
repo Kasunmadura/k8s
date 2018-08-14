@@ -10,9 +10,9 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app: test
+          app: "test"
   egress:
   - to:
     - podSelector:
         matchLabels:
-          app: test
+          app: "test"
